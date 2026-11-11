@@ -1,0 +1,21 @@
+build/
+build-*/
+cmake-build-*/
+.cache/
+CMakeUserPresets.json
+
+# Qt / moc / rcc artefacts that escape the build dir
+*.autosave
+*.qmlc
+*.jsc
+.qmake.stash
+.qtc_clangd/
+
+# macOS
+.DS_Store
+*.app/
+
+# Editors
+.vscode/
+.idea/
+*.swp
