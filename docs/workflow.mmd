@@ -1,0 +1,61 @@
+flowchart LR
+    %% ---- Inputs ----
+    KB[Keyboard<br/>WASD · QE · RF · Space · 1/2/3]
+    UI[Dashboard<br/>buttons · spinboxes]
+
+    %% ---- Qt/App layer ----
+    subgraph APP["Qt / App layer"]
+        direction TB
+        EF[eventFilter<br/>app-wide]
+        RC[RovController<br/>QML singleton]
+        TIMER[QTimer @ 50 Hz]
+        LOG[CsvLogger<br/>10 Hz rows]
+    end
+
+    %% ---- Pure C++ sim ----
+    subgraph SIM["Simulation core -- no Qt"]
+        direction TB
+        INPUT[Operator demand<br/>+ Mode]
+        INTERLOCK[Safety interlocks<br/>disarm = 0 thrust<br/>dead-man timeout]
+        HOLD{Hold-mode<br/>controllers}
+        DEPTH_PID[Depth Hold PID<br/>D on measurement<br/>anti-windup]
+        HEAD_PID[Heading Hold PID<br/>wraps 359 to 1]
+        LAG[Thruster lag<br/>1st-order exp]
+        PHYS[Dynamics<br/>drag · buoyancy<br/>attitude · battery<br/>+ ocean current]
+        STATE[(VehicleState)]
+    end
+
+    %% ---- Dashboard outputs ----
+    subgraph VIEW["Dashboard -- QML"]
+        direction TB
+        ADI[Artificial horizon<br/>+ compass]
+        CHARTS[Depth and Heading<br/>plots -- Canvas]
+        MAP[OSM map<br/>+ track + current arrow]
+        TELEM[Numeric fields<br/>thrust bars · battery]
+    end
+
+    %% ---- Edges ----
+    KB --> EF --> RC
+    UI --> RC
+    TIMER --> RC
+    RC --> INPUT --> INTERLOCK --> HOLD
+    HOLD -- "Depth Hold" --> DEPTH_PID --> LAG
+    HOLD -- "Heading Hold" --> HEAD_PID --> LAG
+    HOLD -- "Manual" --> LAG
+    LAG --> PHYS --> STATE
+    STATE -. telemetryChanged .-> RC
+    RC --> ADI
+    RC --> CHARTS
+    RC --> MAP
+    RC --> TELEM
+    RC --> LOG
+    LOG --> CSV[["~/rov_YYYYMMDD_HHMMSS.csv"]]
+
+    classDef sim fill:#1b2a35,stroke:#2f9fd6,color:#e6edf3;
+    classDef app fill:#232b36,stroke:#7d8f9e,color:#e6edf3;
+    classDef view fill:#1e2a1e,stroke:#3fb950,color:#e6edf3;
+    classDef io   fill:#2a1a1a,stroke:#f04747,color:#e6edf3;
+    class INPUT,INTERLOCK,HOLD,DEPTH_PID,HEAD_PID,LAG,PHYS,STATE sim
+    class EF,RC,TIMER,LOG app
+    class ADI,CHARTS,MAP,TELEM view
+    class KB,UI,CSV io

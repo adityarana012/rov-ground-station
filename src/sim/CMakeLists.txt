@@ -13,6 +13,9 @@ add_library(rovsim STATIC
     Simulator.cpp
     Simulator.h
     VehicleState.h
+    Pid.h
+    CsvLogger.cpp
+    CsvLogger.h
 )
 
 target_include_directories(rovsim

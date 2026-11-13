@@ -1,0 +1,15 @@
+{
+  "theme": "dark",
+  "themeVariables": {
+    "background": "#0e1419",
+    "primaryColor": "#1b2a35",
+    "primaryTextColor": "#e6edf3",
+    "primaryBorderColor": "#2f9fd6",
+    "lineColor": "#7d8f9e",
+    "fontFamily": "-apple-system, Helvetica, Arial, sans-serif"
+  },
+  "flowchart": {
+    "curve": "basis",
+    "padding": 14
+  }
+}

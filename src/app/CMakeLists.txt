@@ -1,5 +1,7 @@
 qt_add_executable(rov_ground_station
     main.cpp
+    RovController.cpp
+    RovController.h
 )
 
 qt_add_qml_module(rov_ground_station
@@ -7,6 +9,8 @@ qt_add_qml_module(rov_ground_station
     VERSION 1.0
     QML_FILES
         qml/Main.qml
+    DEPENDENCIES
+        QtQuick
 )
 
 target_compile_definitions(rov_ground_station PRIVATE
@@ -14,8 +18,11 @@ target_compile_definitions(rov_ground_station PRIVATE
 )
 
 target_link_libraries(rov_ground_station PRIVATE
+    Qt6::Qml
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Location
+    Qt6::Positioning
     rovsim
 )
 

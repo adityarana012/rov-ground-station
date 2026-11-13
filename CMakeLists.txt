@@ -20,7 +20,15 @@ option(ROV_BUILD_TESTS "Build the headless simulation unit tests" ON)
 # ---------------------------------------------------------------------------
 # Only the GUI layer depends on Qt. The simulation core (src/sim) is deliberately
 # Qt-free so it can be compiled and tested without a display or an event loop.
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Gui Quick QuickControls2)
+find_package(Qt6 6.5 REQUIRED COMPONENTS
+    Core
+    Gui
+    Qml
+    Quick
+    QuickControls2
+    Location          # QML Map element
+    Positioning       # coordinates, anchors on the map
+)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
